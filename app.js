@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const mongoose = mongoose();
+const mongoose = require('mongoose');
 
 const MONGO_URI = 'mongodb://127.0.0.1:27017/demo-redux';
 

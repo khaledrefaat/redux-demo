@@ -13,7 +13,10 @@ const cartSchema = new Schema({
     },
     total: Number,
   },
-  quantity: Number,
+  quantity: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = model('Cart', cartSchema);
