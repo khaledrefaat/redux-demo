@@ -20,7 +20,7 @@ const cartSlice = createSlice({
         state.cart.push({
           ...action.payload,
           quantity: 1,
-          total: state.cart.price,
+          total: action.payload.price,
         });
       }
     },
