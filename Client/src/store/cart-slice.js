@@ -25,17 +25,17 @@ const cartSlice = createSlice({
       }
     },
     removeFromCart(state, action) {
-      const currentItem = state.cart.find(
+      const exsistingItem = state.cart.find(
         ({ title }) => title === action.payload.title
       );
 
-      if (currentItem.quantity === 1) {
+      if (exsistingItem.quantity === 1) {
         state.cart = state.cart.filter(
           item => item.title !== action.payload.title
         );
       } else {
-        currentItem.quantity = currentItem.quantity - 1;
-        currentItem.total = currentItem.total - currentItem.price;
+        exsistingItem.quantity--;
+        exsistingItem.total = exsistingItem.total - exsistingItem.price;
       }
     },
   },
