@@ -12,11 +12,11 @@ exports.getCart = async (req, res, next) => {
 };
 
 exports.addToCart = async (req, res, next) => {
-  const { title, description, price, id } = req.body;
+  const { title, description, price, _id } = req.body;
 
   let exsistingCart;
   try {
-    exsistingCart = await Cart.findById(id);
+    exsistingCart = await Cart.findById(_id);
   } catch (err) {
     console.log(err);
   }
@@ -27,7 +27,8 @@ exports.addToCart = async (req, res, next) => {
       exsistingCart.product.total =
         exsistingCart.product.total + exsistingCart.product.price;
       await exsistingCart.save();
-      return next();
+      const cart = await Cart.find();
+      return res.json(cart);
     }
   } catch (err) {
     console.log(err);
@@ -44,37 +45,40 @@ exports.addToCart = async (req, res, next) => {
     console.log(err);
   }
 
-  return next();
+  let cart;
+  try {
+    cart = await Cart.find();
+  } catch (err) {
+    console.log(err);
+  }
+
+  res.json(cart);
 };
 
 exports.editCartItem = async (req, res, next) => {
-  const { cartId } = req.params;
-  const { title, price, description } = req.body;
+  const { cartId } = req.body;
 
-  let exsistingCartItem;
   try {
-    exsistingCartItem = await Cart.findById(cartId);
-    const { product, quantity } = exsistingCartItem;
-    product.title = title || product.title;
-    product.price = price || product.price;
-    product.description = description || product.description;
-    product.total = quantity * product.price;
-    await exsistingCartItem.save();
+    const exsistingCartItem = await Cart.findById(cartId);
+
+    if (exsistingCartItem.quantity === 1) {
+      await exsistingCartItem.remove();
+    } else {
+      exsistingCartItem.quantity--;
+      exsistingCartItem.total =
+        exsistingCartItem.total - exsistingCartItem.price;
+      await exsistingCartItem.save();
+    }
   } catch (err) {
     console.log(err);
   }
 
-  res.json(exsistingCartItem);
-};
-
-exports.deleteCartItem = async (req, res, next) => {
-  const { cartId } = req.params;
-
+  let cart;
   try {
-    await Cart.findByIdAndDelete(cartId);
+    cart = await Cart.find();
   } catch (err) {
     console.log(err);
   }
 
-  next();
+  res.json(cart);
 };

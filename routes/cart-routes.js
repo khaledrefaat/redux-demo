@@ -12,8 +12,6 @@ router.get('/', getCart);
 
 router.post('/', addToCart);
 
-router.patch('/:cartId', editCartItem);
-
-router.delete('/:cartId', deleteCartItem);
+router.patch('/', editCartItem);
 
 module.exports = router;
